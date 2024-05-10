@@ -15,7 +15,7 @@ options:
 	@echo "CC       = tcc"
 
 .c.o:
-	gcc -c ${CFLAGS} $<
+	tcc -c ${CFLAGS} $<
 
 ${OBJ}: config.h config.mk
 
@@ -23,7 +23,8 @@ config.h:
 	cp config.def.h $@
 
 dwm: ${OBJ}
-	gcc -o $@ ${OBJ} ${LDFLAGS}
+	tcc -o $@ ${OBJ} ${LDFLAGS}
+	g++ getcolor.cpp  -o main `pkg-config --cflags --libs opencv4`
 
 clean:
 	rm -f dwm ${OBJ} dwm-${VERSION}.tar.gz
@@ -43,6 +44,8 @@ install: all
 	mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	sed "s/VERSION/${VERSION}/g" < dwm.1 > ${DESTDIR}${MANPREFIX}/man1/dwm.1
 	chmod 644 ${DESTDIR}${MANPREFIX}/man1/dwm.1
+	cp ./main /usr/bin/monet
+	cp ./setwallpaper /usr/bin/setwallpaper
 
 uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/dwm\
